@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>IntelliRoute</title>
+    <link rel="stylesheet" href="s.css">
+</head>
+
+<body>
+
+<!-- ✈️ PLANES -->
+<div class="plane p1">✈</div>
+<div class="plane p2">✈</div>
+<div class="plane p3">✈</div>
+<div class="plane p4">✈</div>
+<div class="plane p5">✈</div>
+<div class="plane p6">✈</div>
+<div class="plane p7">✈</div>
+
+<div class="mainBox">
+
+    <div class="title">
+        ✈ IntelliRoute
+        <p>Smart Flight Path Optimization</p>
+    </div>
+
+    <div class="row">
+        <label>Source Airport</label>
+        <input type="text" placeholder="Delhi">
+    </div>
+
+    <div class="row">
+        <label>Destination Airport</label>
+        <input type="text" placeholder="Mumbai">
+    </div>
+
+    <div class="row">
+        <label>Select Mode</label>
+
+        <div class="radioGroup">
+            <input type="radio" id="cost" name="mode" checked>
+            <label for="cost">💰 Minimum Cost</label>
+
+            <input type="radio" id="time" name="mode">
+            <label for="time">⏱ Minimum Time</label>
+
+            <input type="radio" id="balanced" name="mode">
+            <label for="balanced">⚖ Balanced Route</label>
+
+            <input type="radio" id="all" name="mode">
+            <label for="all">📊 Optimal Routes</label>
+        </div>
+    </div>
+
+    <button class="btn"><span>Search Route</span></button>
+
+    <div class="outputBox">
+        ✨ Your optimized route will appear here
+    </div>
+
+</div>
+
+<script>
+    const airportMap = {
+    delhi: "DEL",
+    mumbai: "BOM",
+    bangalore: "BLR",
+    bengaluru: "BLR",
+    hyderabad: "HYD",
+    chennai: "MAA",
+    kolkata: "CCU",
+    pune: "PNQ",
+    goa: "GOI",
+    ahmedabad: "AMD"
+};
+
+function getCode(input) {
+    input = input.toLowerCase().trim();
+
+    // if already IATA code
+    if (input.length === 3) return input.toUpperCase();
+
+    return airportMap[input] || input.toUpperCase();
+}
+document.querySelector(".btn").addEventListener("click", async () => {
+
+    const rawSource = document.querySelectorAll("input")[0].value;
+    const rawDestination = document.querySelectorAll("input")[1].value;
+    
+    const source = getCode(rawSource);
+    const destination = getCode(rawDestination);
+
+    const mode = document.querySelector('input[name="mode"]:checked').id;
+
+    const outputBox = document.querySelector(".outputBox");
+
+    if (!source || !destination) {
+        outputBox.innerHTML = "⚠️ Please enter both source and destination";
+        return;
+    }
+
+    outputBox.innerHTML = "⏳ Fetching routes...";
+
+    try {
+        const response = await fetch("http://localhost:3000/route", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify({ source, destination })
+        });
+
+        const data = await response.json();
+
+        let html = `<h3>✈️ Route: ${source} → ${destination}</h3>`;
+
+        if (mode === "cost") {
+            html += `<div class="card">💰 Cheapest<br>${data.cheapest}</div>`;
+        }
+        else if (mode === "time") {
+            html += `<div class="card">⚡ Fastest<br>${data.fastest}</div>`;
+        }
+        else if (mode === "balanced") {
+            html += `<div class="card">⚖️ Balanced<br>${data.balanced}</div>`;
+        }
+        else {
+            html += `<div class="card">📊 Pareto Routes<br>${data.pareto}</div>`;
+        }
+
+        outputBox.innerHTML = html;
+
+    } catch (error) {
+        outputBox.innerHTML = "❌ Error connecting to server";
+    }
+
+});
+</script>
+
+</body>
+
+</html> 
