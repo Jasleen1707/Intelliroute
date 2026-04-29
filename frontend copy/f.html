@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>IntelliRoute</title>
+    <link rel="stylesheet" href="s.css">
+</head>
+
+<body>
+
+<!-- ✈️ PLANES -->
+<div class="plane p1">✈</div>
+<div class="plane p2">✈</div>
+<div class="plane p3">✈</div>
+<div class="plane p4">✈</div>
+<div class="plane p5">✈</div>
+<div class="plane p6">✈</div>
+<div class="plane p7">✈</div>
+
+<div class="mainBox">
+
+    <div class="title">
+        ✈ IntelliRoute
+        <p>Smart Flight Path Optimization</p>
+    </div>
+
+    <div class="row">
+        <label>Source Airport</label>
+        <input type="text" placeholder="Delhi">
+    </div>
+
+    <div class="row">
+        <label>Destination Airport</label>
+        <input type="text" placeholder="Mumbai">
+    </div>
+
+    <div class="row">
+        <label>Select Mode</label>
+
+        <div class="radioGroup">
+            <input type="radio" id="cost" name="mode" checked>
+            <label for="cost">💰 Minimum Cost</label>
+
+            <input type="radio" id="time" name="mode">
+            <label for="time">⏱ Minimum Time</label>
+
+            <input type="radio" id="balanced" name="mode">
+            <label for="balanced">⚖ Balanced Route</label>
+
+            <input type="radio" id="all" name="mode">
+            <label for="all">🌐 All Routes</label>
+        </div>
+    </div>
+
+    <button class="btn"><span>Search Route</span></button>
+
+    <div class="outputBox">
+        ✨ Your optimized route will appear here
+    </div>
+
+</div>
+
+</body>
+</html>
